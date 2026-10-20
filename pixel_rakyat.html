@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
+<title>Pixel Rakyat — Miliki Sebagian Internet</title>
+<style>
+:root{--bg:#0b1020;--panel:#141c2f;--panel2:#1b2640;--text:#f3f6ff;--muted:#a9b4cc;--accent:#7c9cff;--line:#2c3854;--green:#67e8b2}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#172442 0,#0b1020 55%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh}
+header{max-width:1100px;margin:auto;padding:22px 16px 10px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-weight:900;letter-spacing:.04em;font-size:clamp(20px,4vw,30px)}.brand span{color:var(--accent)}
+.pill{border:1px solid var(--line);background:#10192c;color:var(--muted);padding:7px 10px;border-radius:99px;font-size:12px}
+main{max-width:1100px;margin:auto;padding:12px 16px 40px}
+.hero{text-align:center;padding:16px 0 22px}.hero h1{font-size:clamp(28px,6vw,48px);line-height:1.08;margin:8px 0 12px;letter-spacing:-.04em}.hero h1 em{font-style:normal;color:var(--accent)}.hero p{max-width:620px;margin:0 auto;color:var(--muted);line-height:1.6}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 20px}.stat{background:rgba(20,28,47,.85);border:1px solid var(--line);border-radius:15px;padding:13px;text-align:center}.stat strong{display:block;font-size:clamp(17px,4vw,24px)}.stat span{font-size:12px;color:var(--muted)}
+.layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(260px,.8fr);gap:16px;align-items:start}
+.card{background:rgba(20,28,47,.94);border:1px solid var(--line);border-radius:18px;padding:15px;box-shadow:0 15px 40px #0002}
+.cardhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.card h2{font-size:17px;margin:0}.sub{font-size:12px;color:var(--muted)}
+.canvaswrap{overflow:hidden;border:1px solid #3b4b70;border-radius:12px;background:#fff;touch-action:pan-y;position:relative}
+canvas{display:block;width:100%;height:auto;aspect-ratio:1/1;image-rendering:pixelated;touch-action:pan-y;cursor:crosshair}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:10px 12px;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer}.btn:active{transform:scale(.98)}.btn.primary{background:var(--accent);color:#101827;border-color:var(--accent)}.btn:disabled{opacity:.4;cursor:not-allowed}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:10px}.dot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}.free{background:#fff;border:1px solid #9ca3af}.selected{background:#7c9cff}.sold{background:#1f2937}
+.price{font-size:30px;font-weight:900;letter-spacing:-.04em;margin:5px 0}.muted{color:var(--muted);font-size:13px;line-height:1.5}.field{margin:14px 0}.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:7px}.field input,.field select{width:100%;border:1px solid var(--line);background:#0e1628;color:var(--text);border-radius:10px;padding:12px;font:inherit;outline:none}.field input:focus,.field select:focus{border-color:var(--accent)}input[type=color]{padding:4px;height:44px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.summary{background:#0e1628;border:1px solid var(--line);border-radius:12px;padding:12px;margin:14px 0}.sumrow{display:flex;justify-content:space-between;gap:12px;font-size:13px;margin:5px 0}.sumrow strong{font-variant-numeric:tabular-nums}.notice{font-size:12px;line-height:1.5;color:#f7d794;background:#332b1b;border:1px solid #594726;padding:10px;border-radius:10px;margin-top:12px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:25px 10px 35px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#f3f6ff;color:#111827;padding:11px 16px;border-radius:12px;font-size:13px;font-weight:700;box-shadow:0 8px 25px #0004;display:none;max-width:90vw;z-index:5}
+@media(max-width:760px){header{padding-top:16px}.layout{grid-template-columns:1fr}.stats{gap:7px}.stat{padding:10px 5px}.card{padding:12px}.hero{padding-top:10px}.hero p{font-size:14px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">PIXEL <span>RAKYAT</span></div>
+  <div class="pill">DEMO INTERAKTIF</div>
+</header>
+<main>
+  <section class="hero">
+    <div class="pill">SATU JUTA PIXEL. SATU KANVAS BERSAMA.</div>
+    <h1>Internet ini punya <em>ruang buat lu.</em></h1>
+    <p>Pilih area di kanvas, tentukan warnanya, lalu lihat berapa harganya. Ini demo konsep marketplace piksel—belum ada pembayaran sungguhan.</p>
+  </section>
+  <section class="stats">
+    <div class="stat"><strong>1.000.000</strong><span>Total piksel</span></div>
+    <div class="stat"><strong>Rp1.000</strong><span>Harga per piksel</span></div>
+    <div class="stat"><strong id="availableStat">1.000.000</strong><span>Piksel tersedia (demo)</span></div>
+  </section>
+  <section class="layout">
+    <div class="card">
+      <div class="cardhead"><div><h2>Kanvas publik</h2><div class="sub">1000 × 1000 piksel</div></div><div class="pill" id="zoomLabel">Tampilan 1×</div></div>
+      <div class="canvaswrap"><canvas id="canvas" width="1000" height="1000" aria-label="Kanvas pixel interaktif"></canvas></div>
+      <div class="tools">
+        <button class="btn" id="zoomIn">＋ Zoom</button>
+        <button class="btn" id="zoomOut">－ Zoom</button>
+        <button class="btn" id="resetView">Reset tampilan</button>
+        <button class="btn" id="clearSelection">Hapus pilihan</button>
+      </div>
+      <div class="legend"><span><i class="dot free"></i>Kosong</span><span><i class="dot selected"></i>Dipilih</span><span><i class="dot sold"></i>Contoh terjual</span></div>
+      <p class="muted">Ketuk atau seret untuk memilih piksel. Di HP, gunakan zoom agar area kecil lebih mudah dipilih. Setiap kotak yang dipilih dihitung Rp1.000.</p>
+    </div>
+    <aside class="card">
+      <div class="cardhead"><h2>Pesanan lu</h2><span class="pill">LANGKAH 1/2</span></div>
+      <div class="sub">Total area dipilih</div>
+      <div class="price" id="totalPrice">Rp0</div>
+      <div class="muted">Pilih satu atau lebih piksel di kanvas untuk mulai.</div>
+      <div class="summary">
+        <div class="sumrow"><span>Jumlah piksel</span><strong id="count">0 px</strong></div>
+        <div class="sumrow"><span>Harga per piksel</span><strong>Rp1.000</strong></div>
+        <div class="sumrow"><span>Ukuran area pilihan</span><strong id="dimensions">—</strong></div>
+      </div>
+      <div class="field"><label for="pixelColor">Warna area pilihan</label><input type="color" id="pixelColor" value="#7c9cff"></div>
+      <div class="field"><label for="buyerName">Nama / nama brand (demo)</label><input id="buyerName" maxlength="40" placeholder="Contoh: Toko Kopi Kita"></div>
+      <div class="field"><label for="pixelNote">Tautan website (opsional, demo)</label><input id="pixelNote" maxlength="180" placeholder="https://contoh.com"></div>
+      <button class="btn primary" id="applyColor" style="width:100%">Terapkan warna ke pilihan</button>
+      <button class="btn" id="saveDemo" style="width:100%;margin-top:8px">Simpan demo di perangkat</button>
+      <button class="btn" id="exportPng" style="width:100%;margin-top:8px">Unduh kanvas PNG</button>
+      <div class="notice"><strong>Catatan:</strong> Tombol di sini tidak memproses pembayaran. Data demo tersimpan di browser perangkat ini saja dan tidak otomatis terlihat oleh pengunjung lain. Jangan masukkan informasi sensitif.</div>
+    </aside>
+  </section>
+</main>
+<footer>Pixel Rakyat © Demo konsep • Harga dan penjualan belum aktif • Dibuat untuk diuji lewat browser Android</footer>
+<div class="toast" id="toast"></div>
+<script>
+(() => {
+  const SIZE=1000, PRICE=1000, MAX_SELECT=50000;
+  const canvas=document.getElementById('canvas'), ctx=canvas.getContext('2d',{alpha:false});
+  const selected=new Set(), colored=new Map();
+  let zoom=1, drawing=false, lastCell=null, toastTimer;
+  const $=id=>document.getElementById(id);
+  const fmt=n=>'Rp'+n.toLocaleString('id-ID');
+  // Very subtle grid makes the blank canvas visible without drawing one million DOM elements.
+  function render(){
+    ctx.fillStyle='#ffffff';ctx.fillRect(0,0,SIZE,SIZE);
+    // Draw colored demo cells as compact rectangles.
+    for(const [key,color] of colored){
+      const x=key%SIZE,y=Math.floor(key/SIZE);
+      ctx.fillStyle=color;ctx.fillRect(x,y,1,1);
+    }
+    // Selected pixels are displayed in blue.
+    ctx.fillStyle='#7c9cff';
+    for(const key of selected){const x=key%SIZE,y=Math.floor(key/SIZE);ctx.fillRect(x,y,1,1);}
+    // Light grid, shown as a fine texture.
+    ctx.strokeStyle='rgba(120,135,160,.22)';ctx.lineWidth=1;
+    ctx.beginPath();
+    for(let x=0;x<=SIZE;x+=10){ctx.moveTo(x+.5,0);ctx.lineTo(x+.5,SIZE);}
+    for(let y=0;y<=SIZE;y+=10){ctx.moveTo(0,y+.5);ctx.lineTo(SIZE,y+.5);}
+    ctx.stroke();
+    $('zoomLabel').textContent='Tampilan '+zoom+'×';
+    updateSummary();
+  }
+  function updateSummary(){
+    const n=selected.size;
+    $('count').textContent=n.toLocaleString('id-ID')+' px';
+    $('totalPrice').textContent=fmt(n*PRICE);
+    $('availableStat').textContent=(SIZE*SIZE-colored.size).toLocaleString('id-ID');
+    if(!n){$('dimensions').textContent='—';return;}
+    let minX=SIZE,minY=SIZE,maxX=0,maxY=0;
+    for(const key of selected){let x=key%SIZE,y=Math.floor(key/SIZE);minX=Math.min(minX,x);maxX=Math.max(maxX,x);minY=Math.min(minY,y);maxY=Math.max(maxY,y);}
+    $('dimensions').textContent=(maxX-minX+1)+' × '+(maxY-minY+1);
+  }
+  function pos(e){
+    const r=canvas.getBoundingClientRect();
+    const x=Math.max(0,Math.min(SIZE-1,Math.floor((e.clientX-r.left)/r.width*SIZE)));
+    const y=Math.max(0,Math.min(SIZE-1,Math.floor((e.clientY-r.top)/r.height*SIZE)));
+    return {x,y,key:y*SIZE+x};
+  }
+  function addCell(e){
+    const {key}=pos(e);
+    if(lastCell===key)return;lastCell=key;
+    if(selected.has(key))selected.delete(key);
+    else if(selected.size<MAX_SELECT)selected.add(key);
+    else {showToast('Maksimal 50.000 piksel per pilihan di demo ini.');return;}
+    render();
+  }
+  canvas.addEventListener('pointerdown',e=>{drawing=true;lastCell=null;canvas.setPointerCapture?.(e.pointerId);addCell(e);});
+  canvas.addEventListener('pointermove',e=>{if(drawing)addCell(e);});
+  canvas.addEventListener('pointerup',()=>{drawing=false;lastCell=null;});
+  canvas.addEventListener('pointercancel',()=>{drawing=false;lastCell=null;});
+  $('zoomIn').onclick=()=>{zoom=Math.min(8,zoom+1);canvas.style.width=(100*zoom)+'%';canvas.style.maxWidth='none';canvas.parentElement.style.overflow='auto';$('zoomLabel').textContent='Tampilan '+zoom+'×';};
+  $('zoomOut').onclick=()=>{zoom=Math.max(1,zoom-1);canvas.style.width=zoom===1?'100%':(100*zoom)+'%';canvas.style.maxWidth=zoom===1?'100%':'none';$('zoomLabel').textContent='Tampilan '+zoom+'×';};
+  $('resetView').onclick=()=>{zoom=1;canvas.style.width='100%';canvas.style.maxWidth='100%';canvas.parentElement.scrollTop=0;canvas.parentElement.scrollLeft=0;$('zoomLabel').textContent='Tampilan 1×';};
+  $('clearSelection').onclick=()=>{selected.clear();render();};
+  $('applyColor').onclick=()=>{
+    if(!selected.size){showToast('Pilih piksel di kanvas dulu.');return;}
+    const color=$('pixelColor').value;
+    for(const key of selected)colored.set(key,color);
+    selected.clear();render();showToast('Warna diterapkan di demo lokal.');
+  };
+  $('saveDemo').onclick=()=>{
+    try{
+      const data={colored:Array.from(colored.entries()),name:$('buyerName').value,note:$('pixelNote').value};
+      localStorage.setItem('pixelRakyatDemo',JSON.stringify(data));showToast('Demo tersimpan di browser perangkat ini.');
+    }catch(e){showToast('Penyimpanan gagal. Coba kurangi jumlah piksel.');}
+  };
+  $('exportPng').onclick=()=>{
+    const out=document.createElement('canvas');out.width=SIZE;out.height=SIZE;const o=out.getContext('2d');
+    o.fillStyle='#fff';o.fillRect(0,0,SIZE,SIZE);
+    for(const [key,color] of colored){o.fillStyle=color;o.fillRect(key%SIZE,Math.floor(key/SIZE),1,1);}
+    out.toBlob(blob=>{if(!blob){showToast('Gagal membuat PNG.');return;}const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='pixel-rakyat-canvas.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+  };
+  function showToast(msg){const t=$('toast');t.textContent=msg;t.style.display='block';clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.style.display='none',2600);}
+  try{
+    const raw=localStorage.getItem('pixelRakyatDemo');
+    if(raw){const data=JSON.parse(raw);if(Array.isArray(data.colored))for(const [k,v] of data.colored)if(Number.isInteger(k)&&k>=0&&k<SIZE*SIZE&&typeof v==='string')colored.set(k,v);$('buyerName').value=data.name||'';$('pixelNote').value=data.note||'';}
+  }catch(e){}
+  render();
+})();
+</script>
+</body>
+</html>
